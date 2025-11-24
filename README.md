@@ -9,10 +9,26 @@ numpy
 pandas
 matplotlib
 tensorflow 2.16.1
+pytest
 ```
 
+## 2. Test
+Under the ```model``` root:
+```bash
+pytest -q 
+```
+You should get something like
+```bash
+==================== test session starts ====================
 
-## 2. Usage
+tests/test_featureless.py .....
+tests/test_featurebased_utils.py ..
+tests/test_featurebased_network.py ..
+
+===================== 7 passed in 1.23s =====================
+```
+
+## 3. Usage
 
 Gerenate synthetic data:
 
@@ -28,7 +44,7 @@ python exp_hypothetic.py
 python exp_synthetic.py
 ```
 
-## 3. Replicated results
+## 4. Replicated results
 
 <figure>
   <img src="result/Halo-Ratio_Effect.jpg">
