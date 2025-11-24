@@ -8,7 +8,15 @@ This repository contains a tensorflow implementation for DeepHalo model with ful
 Gerenate synthetic data:
 
 ```bash
-python chart_pattern_trading.py --close close.csv --ticker tickers.csv
+python data/hypothetical.py.py
+python data/synthetic.py
+```
+
+Perform experiments:
+
+```bash
+python data/hypothetical.py.py
+python data/synthetic.py
 ```
 
 
