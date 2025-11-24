@@ -13,7 +13,7 @@ pytest
 ```
 
 ## 2. Test
-Under the ```model``` root:
+Under the ```./model``` root:
 ```bash
 pytest -q 
 ```
