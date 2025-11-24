@@ -28,6 +28,16 @@ python exp_hypothetic.py
 python exp_synthetic.py
 ```
 
+## 3. Replicated results
+
+<figure>
+  <img src="result/Halo-Ratio_Effect.jpg" width="1400">
+</figure>
+
+<figure>
+  <img src="Halo-Effect_model_depth_on_error_depth_all.jpg" width="1400">
+</figure>
+
 
 
 
