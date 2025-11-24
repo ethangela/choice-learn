@@ -8,7 +8,7 @@ This repository contains a tensorflow implementation for DeepHalo model with ful
 numpy
 pandas
 matplotlib
-tensorflow 2.
+tensorflow 2.16.1
 ```
 
 
