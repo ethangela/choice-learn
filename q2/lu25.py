@@ -597,7 +597,7 @@ def run_grid(
     J: int,
     T: int,
     dgp: Literal["DGP1", "DGP2", "DGP3", "DGP4"],
-    n_rep: int = 10,
+    n_rep: int = 50,
     base_seed: int = 2025,
 ) -> pd.DataFrame:
     """
@@ -605,7 +605,7 @@ def run_grid(
     Increase n_rep to 50 to match the paper. citeturn5view0
     """
     true = TrueParams()
-    methods = ["blp_with_cost_iv", "blp_without_cost_iv", "shrinkage"]
+    methods = ["shrinkage"]#["blp_with_cost_iv", "blp_without_cost_iv", "shrinkage"]
     rows = []
     for method in methods:
         ests = []
@@ -638,6 +638,6 @@ if __name__ == "__main__":
     for DGP in ["DGP1","DGP3","DGP3","DGP4"]:
         for JJ, TT in [(5,25),(5,100),(15,25),(15,100)]:
             print(f'current setting: {DGP} J{JJ} T{TT}')
-            df_out = run_grid(J=JJ, T=TT, dgp=DGP, n_rep=10)
+            df_out = run_grid(J=JJ, T=TT, dgp=DGP, n_rep=50)
             df_out.to_pickle(f'{JJ}_{TT}_{DGP}.pkl')
 
