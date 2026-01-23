@@ -605,7 +605,7 @@ def run_grid(
     Increase n_rep to 50 to match the paper. citeturn5view0
     """
     true = TrueParams()
-    methods = ["shrinkage"]#["blp_with_cost_iv", "blp_without_cost_iv", "shrinkage"]
+    methods = ["blp_with_cost_iv", "blp_without_cost_iv"]#, "shrinkage"] #TODO
     rows = []
     for method in methods:
         ests = []
@@ -635,9 +635,14 @@ def run_grid(
 
 if __name__ == "__main__":
 
-    for DGP in ["DGP1","DGP3","DGP3","DGP4"]:
+    for DGP in ["DGP3","DGP4"]:#["DGP1","DGP2","DGP3","DGP4"]:
         for JJ, TT in [(5,25),(5,100),(15,25),(15,100)]:
             print(f'current setting: {DGP} J{JJ} T{TT}')
             df_out = run_grid(J=JJ, T=TT, dgp=DGP, n_rep=50)
-            df_out.to_pickle(f'{JJ}_{TT}_{DGP}.pkl')
+            df_out.to_pickle(f'./yangsun/nomc_{JJ}_{TT}_{DGP}.pkl')
+
+    # for JJ, TT in [(5,25),(5,100),(15,25),(15,100)]:
+    #     unpick = pd.read_pickle(f'./shipan_0105/{JJ}_{TT}_DGP1.pkl')  
+    #     print(unpick)
+    #     print('\n')
 
