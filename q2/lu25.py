@@ -639,7 +639,7 @@ if __name__ == "__main__":
         for JJ, TT in [(5,25),(5,100),(15,25),(15,100)]:
             print(f'current setting: {DGP} J{JJ} T{TT}')
             df_out = run_grid(J=JJ, T=TT, dgp=DGP, n_rep=50)
-            df_out.to_pickle(f'./yangsun/nomc_{JJ}_{TT}_{DGP}.pkl')
+            df_out.to_pickle(f'./nomc_{JJ}_{TT}_{DGP}.pkl')
 
     # for JJ, TT in [(5,25),(5,100),(15,25),(15,100)]:
     #     unpick = pd.read_pickle(f'./shipan_0105/{JJ}_{TT}_DGP1.pkl')  
