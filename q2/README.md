@@ -1,6 +1,6 @@
-# DeepHalo Tensorflow Implementation
+# Lu25 Tensorflow Implementation
 
-This repository contains a tensorflow implementation for DeepHalo model with full code to perform data generation and synthetic experiments as presentated in the paper. 
+This repository contains a tensorflow implementation for BLP and MCMC simulations in Lu25, as well as the simulation to combine deephalo and sparse shock info as proposed in lu25.
 ---
 
 ## 1. Requirement
@@ -9,50 +9,48 @@ numpy
 pandas
 matplotlib
 tensorflow 2.16.1
+temsroflow_probability 
 pytest
 ```
 
 ## 2. Test
-Under the ```./model``` root:
+Under the ```./q2``` root:
 ```bash
 pytest -q 
 ```
 You should get something like
 ```bash
-==================== test session starts ====================
+=============================================================== test session starts ================================================================
+platform darwin -- Python 3.10.19, pytest-9.0.2, pluggy-1.6.0
+collected 11 items                                                                                                                                 
+tests/test_blp.py ..                                                                                                                         [ 18%]
+tests/test_dgp.py ...                                                                                                                        [ 45%]
+tests/test_invariants.py ...                                                                                                                 [ 72%]
+tests/test_shrinkage.py ...                                                                                                                  [100%]
 
-tests/test_featureless.py .....
-tests/test_featurebased_utils.py ..
-tests/test_featurebased_network.py ..
-
-===================== 7 passed in 1.23s =====================
+================================================================ 11 passed in 4.29s ================================================================
 ```
 
 ## 3. Usage
 
-Gerenate synthetic data:
+Reproduce tables 1-4 in lu25 (and the outputs will be saved automatically):
 
 ```bash
-python data/hypothetical.py
-python data/synthetic.py
+python lu25.py
 ```
 
-Perform experiments (and the outputs will be saved into ```result```):
+Perform simulation combining deephalo and sparse shock as proposed in lu25:
 
 ```bash
-python exp_hypothetic.py
-python exp_synthetic.py
+python deephalo_lu25.py
 ```
 
-## 4. Replicated results
+and the resulted figure is
 
 <figure>
-  <img src="result/Halo-Ratio_Effect.jpg">
+  <img src="nll_vs_lambda_size50000_epoch_500.png">
 </figure>
 
-<figure>
-  <img src="result/Halo-Effect_model_depth_on_error_depth_all.jpg">
-</figure>
 
 
 
