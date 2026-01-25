@@ -179,52 +179,5 @@ if __name__ == "__main__":
     print("Best NLL:", min(nlls))
     print("Best AUC:", max(aucs))
 
-    # auc_seed = []
-    # for seed_num in range(42,42+7,1):
-    #     print(f'current seed {seed_num}')
-    #     E, y, eta_true, eta_mask = simulate_data(seed=seed_num)
-    #     N = E.shape[0]
-    #     perm = np.random.permutation(N)
-    #     tr, va = perm[:int(0.8*N)], perm[int(0.8*N):]
-
-    #     E_tr, y_tr = tf.constant(E[tr]), tf.constant(y[tr])
-    #     E_va, y_va = tf.constant(E[va]), tf.constant(y[va])
-
-    #     # Baseline
-    #     base_model = train_baseline(E_tr, y_tr)
-    #     probs_base, _ = base_model(E_va)
-    #     nll_base = log_likelihood_tf(probs_base, y_va).numpy()
-
-    #     # Lambda sweep
-    #     lambdas = np.logspace(-4, 0, 9)
-    #     results = sweep_lambda(E_tr, y_tr, E_va, y_va, lambdas)
-
-    #     # Extract
-    #     nlls = [r[1] for r in results]
-    #     etas = [r[2] for r in results]
-
-    #     aucs = [
-    #         roc_auc_score(eta_mask, np.abs(eta_hat))
-    #         for eta_hat in etas
-    #     ]
-
-    #     auc_seed.append(aucs)
-    #     file_path = 'my_list_data.pkl'
-    #     with open(file_path, 'wb') as file:
-    #         pickle.dump(auc_seed, file)
-
-
-    # # -----------------------
-    # # Plots
-    # # -----------------------
-    # aucs = np.mean(np.array(auc_seed),axis=0)
-
-    # plt.figure(figsize=(6,4))
-    # plt.semilogx(lambdas, aucs, marker="o")
-    # plt.xlabel(r"Sparsity penalty $\lambda_\eta$")
-    # plt.ylabel("ROC AUC (η recovery)")
-    # plt.tight_layout()
-    # plt.savefig("auc_vs_lambda.png")
-
 
 
