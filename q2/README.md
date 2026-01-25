@@ -48,7 +48,7 @@ python deephalo_lu25.py
 and the resulted figure is
 
 <figure>
-  <img src="nll_vs_lambda_size50000_epoch_500.png">
+  <img src="nll_vs_lambda_size50000_epoch500.png">
 </figure>
 
 
