@@ -8,7 +8,7 @@ This repository contains a tensorflow implementation for BLP and MCMC simulation
 numpy
 pandas
 matplotlib
-tensorflow 2.16.1
+tensorflow
 temsroflow_probability 
 pytest
 ```

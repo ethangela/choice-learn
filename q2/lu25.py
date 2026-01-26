@@ -1,22 +1,14 @@
 #!/usr/bin/env python3
 """
 Monte Carlo replication scaffold for:
-"Estimating Discrete Choice Demand Models with Sparse Market-Product Shocks" (arXiv:2501.02381)
+"Estimating Discrete Choice Demand Models with Sparse Market-Product Shocks" 
 
 What this script provides:
-  1) Data generator matching Section 4.1 Monte Carlo DGPs (DGP1–DGP4).
+  1) Data generator matching Section 4.1 Monte Carlo DGPs (DGP1-DGP4).
   2) A self-contained BLP-style random-coefficients logit GMM estimator for the simple 1-RC case used in the paper.
      - "BLP (with cost IV)" uses instruments (1, w, w^2, u, u^2).
      - "BLP (without cost IV)" uses instruments (1, w, w^2, w^3, w^4).
-     (See Section 4.1)  citeturn5view0
-  3) A TFP MCMC implementation for the Bayesian shrinkage approach (spike-and-slab on eta_{jt})
-     using the paper's recommended hyperparameters (tau0^2, tau1^2) = (1e-3, 1). citeturn8view0
-
-Notes / limitations:
-  - This is designed to be runnable and extensible. It is not pre-optimized for speed for the largest J,T grid.
-  - The shrinkage sampler uses a blocked scheme: NUTS for continuous parameters given gamma, and
-    conjugate draws for gamma and phi given eta. This matches the paper’s description at a high level. citeturn8view0
-  - Running the full 50 replications for (J,T)=(15,100) will be computationally intensive.
+  3) An MCMC implementation for the Bayesian shrinkage approach using the paper's recommended hyperparameters (tau0^2, tau1^2) = (1e-3, 1). 
 
 Dependencies:
   numpy, pandas, scipy, tensorflow, tensorflow_probability
@@ -39,10 +31,9 @@ tfd = tfp.distributions
 tfk = tfp.mcmc
 
 
-# -----------------------------
-# Section 4.1 DGP (data generator)
-# -----------------------------
 
+
+'''1. DGP (data generator)'''
 @dataclass
 class DGPParams:
     beta_p: float = -1.0
@@ -102,8 +93,7 @@ def simulate_markets(
     seed: int = 0,
 ) -> pd.DataFrame:
     """
-    Simulate aggregate market-product data consistent with Section 4.1. citeturn5view0
-
+    Simulate aggregate market-product data consistent with Section 4.1. 
     Output columns:
       market_id, product_id, share, outside_share, q, price, w, u, xi_true, eta_true
     """
@@ -154,10 +144,9 @@ def simulate_markets(
     return pd.DataFrame(rows)
 
 
-# -----------------------------
-# BLP estimator (simple 1-RC, 1 endogenous var)
-# -----------------------------
 
+
+'''2. BLP estimator'''
 def _simulate_choice_probs(delta: np.ndarray, price: np.ndarray, w: np.ndarray, beta_w: float, sigma: float, draws: np.ndarray) -> np.ndarray:
     """
     Predicted shares s_hat_jt given mean utility delta and sigma using simulation draws for nu ~ N(0,1).
@@ -301,22 +290,21 @@ def blp_gmm_estimate(
     return out
 
 
-# -----------------------------
-# Bayesian shrinkage estimator (TFP MCMC)
-# -----------------------------
 
+
+'''3. Bayesian shrinkage estimator'''
 @dataclass
 class ShrinkagePriors:
     tau0_sq: float = 1e-3
     tau1_sq: float = 1.0
     # priors per paper (uninformative)
     beta_loc: float = 0.0
-    beta_scale: float = np.sqrt(10.0)  # N(0, 10 I)
+    beta_scale: float = np.sqrt(10.0) 
     xi_bar_loc: float = 0.0
     xi_bar_scale: float = np.sqrt(10.0)
     # r = log sigma prior: N(0, 0.5)
     r_scale: float = np.sqrt(0.5)
-    # phi prior Beta(a,b), paper uses mean 0.5; simplest is Beta(1,1)
+    # phi prior Beta(a,b)
     a_phi: float = 1.0
     b_phi: float = 1.0
 
@@ -335,7 +323,7 @@ def shrinkage_mcmc(
       - Continuous block: (beta_p, beta_w, xi_bar, r=log sigma, eta_{jt}) sampled via NUTS given gamma.
       - Discrete block: gamma_{jt} and phi_t updated via conjugacy given eta.
 
-    Model matches Section 3 priors and Section 4 likelihood framework. citeturn8view0turn5view0
+    Model matches Section 3 priors and Section 4 likelihood framework.
 
     Returns posterior draws and posterior means.
     """
@@ -352,7 +340,7 @@ def shrinkage_mcmc(
     w = df.pivot(index="market_id", columns="product_id", values="w").values.astype(np.float64)
     q = df.pivot(index="market_id", columns="product_id", values="q").values.astype(np.float64)
 
-    # Pre-draw nu for integrating choice probs (R0=200 in paper for MC approximation) citeturn5view0
+    # Pre-draw nu for integrating choice probs (R0=200 in paper for MC approximation)
     nu = rng.normal(size=R_draws).astype(np.float64)  # (R,)
     nu_tf = tf.constant(nu, dtype=tf.float64)
 
@@ -482,7 +470,6 @@ def shrinkage_mcmc(
         logp0 = np.log(np.clip(1.0-phi[:, None], 1e-12, 1.0)) + (-0.5*np.log(2*np.pi*priors.tau0_sq) - 0.5*(eta_np**2)/priors.tau0_sq)
         m = np.maximum(logp0, logp1)
         p1 = np.exp(logp1 - m) / (np.exp(logp0 - m) + np.exp(logp1 - m))
-        # gamma = (rng.uniform(size=(T, J)) < p1).astype(np.int32)
         gamma = rng.binomial(1, p1).astype(np.int32)
 
 
@@ -510,10 +497,8 @@ def shrinkage_mcmc(
     return post
 
 
-# -----------------------------
-# Table 1/2 replication wrapper
-# -----------------------------
 
+'''4. Table replication wrapper'''
 @dataclass
 class TrueParams:
     xi_bar: float = -1.0
@@ -562,7 +547,6 @@ def run_monte_carlo_once(
     if method == "shrinkage":
         post = shrinkage_mcmc(df, R_draws=params.R_draws, seed=seed+999, num_results=600, num_burnin=400) 
         xi_hat = post["xi_bar_mean"] + post["eta_mean"]
-        # Prob column in Table 1: average posterior inclusion prob gamma_mean for true nonzero vs zero eta citeturn3view1
         eta_true = df.pivot(index="market_id", columns="product_id", values="eta_true").values
         gamma_mean = post["gamma_mean"]
         prob_nonzero = float(gamma_mean[eta_true != 0].mean()) if np.any(eta_true != 0) else float("nan")
@@ -602,7 +586,7 @@ def run_grid(
 ) -> pd.DataFrame:
     """
     Run a small grid (n_rep default 10 for speed) for the three methods and return a summary dataframe.
-    Increase n_rep to 50 to match the paper. citeturn5view0
+    Increase n_rep to 50 to match the paper. 
     """
     true = TrueParams()
     methods = ["blp_with_cost_iv", "blp_without_cost_iv", "shrinkage"]

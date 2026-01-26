@@ -13,6 +13,7 @@ project_root = os.path.abspath(os.getcwd())
 sys.path.append(project_root)
 from deephalo import MainNetwork, log_likelihood_tf
 
+
 # -----------------------
 # DGP: Sparse eta + DeepHalo teacher
 # -----------------------
@@ -57,8 +58,9 @@ def simulate_data(B=50000, J=20, seed=42):
 
     return E, y, eta_true, eta_mask
 
+
 # -----------------------
-# DeepHalo + sparse eta (product-level)
+# DeepHalo + sparse eta 
 # -----------------------
 class DeepHaloWithEta(tf.keras.Model):
     def __init__(self, base_model, lambda_eta):
@@ -79,6 +81,7 @@ class DeepHaloWithEta(tf.keras.Model):
 
     def penalty(self):
         return self.lambda_eta * tf.reduce_sum(tf.abs(self.eta))
+
 
 # -----------------------
 # Training utilities
@@ -125,6 +128,7 @@ def sweep_lambda(E_tr, y_tr, E_va, y_va, lambdas, epochs=500, lr=1e-3):
         nll_va = log_likelihood_tf(probs_va, y_va).numpy()
         results.append((lam, nll_va, model.eta.numpy().copy()))
     return results
+
 
 # -----------------------
 # Main experiment
