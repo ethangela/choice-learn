@@ -1,6 +1,8 @@
 # DeepHalo Tensorflow Implementation
 
 This repository contains a tensorflow implementation for DeepHalo model with full code to perform data generation and synthetic experiments as presentated in the paper. 
+
+[View the report](stage_1_prob_3_ethan_sun.pdf)
 ---
 
 ## 1. Requirement
