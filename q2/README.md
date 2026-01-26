@@ -1,6 +1,8 @@
-# Lu25 Tensorflow Implementation (report: stage_2_prob_3_ethan_sun.pdf)
+# Lu25 Tensorflow Implementation
 
 This repository contains a tensorflow implementation for BLP and MCMC simulations in Lu25, as well as the simulation to combine deephalo and sparse shock info as proposed in lu25.
+
+[View the report](stage_2_prob_3_ethan_sun.pdf)
 ---
 
 ## 1. Requirement
